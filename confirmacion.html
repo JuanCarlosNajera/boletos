@@ -4,23 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmación de Pago</title>
-    <!-- Enlace a los archivos CSS de Bootstrap (Plantilla "Lux") -->
+    <!-- Enlace a los archivos CSS de Bootstrap (Plantilla "Flatly") -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.5.2/lux/bootstrap.min.css">
-    <!-- Enlace a la biblioteca "qrcode-generator" -->
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.5.2/flatly/bootstrap.min.css">
 </head>
 <body>
+    <nav>
+        <a class="btn btn-success" href="index.html">Regresar</a>
+    </nav>
     <div class="container mt-5">
-        <h2 class="text-center">Confirmación de Pago</h2>
-        <p class="text-center">¡Gracias por su reserva! Su pago ha sido procesado con éxito.</p>
-        <p class="text-center">Detalles de la reserva:</p>
-        <ul id="reservation-details" class="list-group mx-auto" style="max-width: 300px;">
-            <!-- Los detalles de los asientos seleccionados se agregarán aquí mediante JavaScript -->
-        </ul>
-        <p class="text-center">Si tiene alguna pregunta, no dude en contactarnos.</p>
-        <div class="text-center mt-4">
-            <div id="qrcode"></div>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h2>Confirmación de Pago</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-center">¡Gracias por su reserva! Su pago ha sido procesado con éxito.</p>
+                        <p class="text-center">Detalles de la reserva:</p>
+                        <ul id="reservation-details" class="list-group">
+                            <!-- Los detalles de los asientos seleccionados se agregarán aquí mediante JavaScript -->
+                        </ul>
+                        <p class="text-center">Si tiene alguna pregunta, no dude en contactarnos.</p>
+                        <div class="text-center mt-4">
+                            <!-- Contenedor para el código QR -->
+                            <div id="qrcode"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -28,9 +40,14 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script>
         // Recuperar los detalles de los asientos seleccionados del almacenamiento local
-        const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
+        const selectedSeats = [
+            { row: 0, col: 0 },
+            { row: 0, col: 1 }
+        ];
+
         const reservationDetailsList = document.getElementById('reservation-details');
 
         if (selectedSeats && selectedSeats.length > 0) {
@@ -41,12 +58,15 @@
                 reservationDetailsList.appendChild(seatDetails);
             }
 
-            // Generar el código QR con los detalles de la reserva
+            // Generar el código QR con los detalles de la reserva simulados
             const qrCodeDiv = document.getElementById('qrcode');
+            const clientName = 'Juan Carlos Basurto Najera';
+            const dateTime = new Date().toLocaleString();
+            const qrCodeData = `Cliente: ${clientName}\nFecha y Hora: ${dateTime}\nAsientos: Fila 1 - Asiento 1, Fila 1 - Asiento 2`;
             const qrCode = new QRCode(qrCodeDiv, {
-                text: JSON.stringify(selectedSeats),
-                width: 128,
-                height: 128
+                text: qrCodeData,
+                width: 300,
+                height: 300
             });
         } else {
             // Si no se han seleccionado asientos, mostrar un mensaje alternativo
