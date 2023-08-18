@@ -82,6 +82,11 @@
         .seat-label {
             /* ... */
         }
+        .seat.selected {
+            background-color: red;
+            color: white;
+        }
+    
     </style>
 </head>
 <body class="bg-light">
@@ -126,7 +131,7 @@
 
         const seatsContainer = document.getElementById('seat-chart');
         const takenSeatsList = document.getElementById('taken-seats-list');
-        const seats = new Array(rows).fill(null).map(() => new Array(cols).fill(false));
+        const seats = JSON.parse(localStorage.getItem('selectedSeats')) || new Array(rows).fill(null).map(() => new Array(cols).fill(false));
 
         function renderSeats() {
             seatsContainer.innerHTML = '';
@@ -157,11 +162,16 @@
                     }
                 }
             }
+
+            // Guardar los asientos en el almacenamiento local
+            localStorage.setItem('selectedSeats', JSON.stringify(seats));
         }
 
         function toggleSeat(row, col, seat) {
-            seats[row][col] = !seats[row][col];
-            renderSeats();
+            if (!seats[row][col]) {
+                seats[row][col] = true;
+                renderSeats();
+            }
         }
 
         function deleteAllSeats() {
